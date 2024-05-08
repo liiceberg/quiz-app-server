@@ -1,26 +1,20 @@
 package ru.kpfu.itis.liiceberg.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
-import java.util.Set;
+public enum Role implements GrantedAuthority {
 
-@Entity
-@Data
-@Table(name = "roles")
-public class Role {
+    ADMIN("ADMIN"),
+    USER("USER");
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final String value;
 
-    private String name;
+    Role(String value) {
+        this.value = value;
+    }
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
-
+    @Override
+    public String getAuthority() {
+        return value;
+    }
 }

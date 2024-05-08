@@ -27,6 +27,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.security:spring-security-taglibs:${properties["springSecurityVersion"]}")
     annotationProcessor("org.hibernate:hibernate-jpamodelgen:${properties["hibernateVersion"]}")
     implementation("org.postgresql:postgresql:42.7.2")
@@ -45,6 +46,10 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+//    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")

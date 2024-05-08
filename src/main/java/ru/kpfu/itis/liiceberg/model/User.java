@@ -1,15 +1,16 @@
 package ru.kpfu.itis.liiceberg.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -26,22 +27,14 @@ public class User {
     @Column(length = 64, nullable = false)
     private String password;
 
+
+    @ElementCollection(targetClass = Role.class)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
+    @JsonIgnore
+    @Column(name = "role")
     private Set<Role> roles;
 
-    public JSONObject toJson() {
-        JSONObject json = new JSONObject();
-        json.put("id", id);
-        json.put("name", name);
-        json.put("email", email);
-        json.put("password", password);
-        return json;
-    }
 }

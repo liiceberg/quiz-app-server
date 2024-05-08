@@ -1,19 +1,15 @@
 package ru.kpfu.itis.liiceberg.controller;
 
-import org.json.JSONObject;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kpfu.itis.liiceberg.dto.RefreshJwtRequest;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
-import ru.kpfu.itis.liiceberg.model.Role;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.service.UserService;
-import ru.kpfu.itis.liiceberg.util.Keys;
-import ru.kpfu.itis.liiceberg.util.ResponseCode;
 
-import java.util.*;
-
-@Controller
+@RestController
+@RequestMapping(path = "user", produces = "application/json")
 public class UserController {
     private final UserService userService;
 
@@ -22,36 +18,24 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public @ResponseBody JSONObject create(@RequestBody UserRequestDto user) {
-        List<JSONObject> results = new ArrayList<>();
-        int responseCode;
+    public ResponseEntity<User> create(@RequestBody UserRequestDto user) {
         try {
             User u = userService.create(user);
-            responseCode = ResponseCode.SUCCESS.getCode();
-            results.add(u.toJson());
+            return new ResponseEntity<>(u, HttpStatus.OK);
         } catch (Exception ex) {
-            responseCode = ResponseCode.FAILURE.getCode();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        JSONObject json = new JSONObject();
-        json.put(Keys.RESPONSE_CODE, responseCode);
-        json.put(Keys.RESULTS, results);
-        return json;
     }
 
-    @PostMapping("/login")
-    public @ResponseBody JSONObject login(@RequestBody UserRequestDto user) {
-        List<JSONObject> results = new ArrayList<>();
-        int responseCode;
-        try {
-            User u = userService.get(user);
-            responseCode = ResponseCode.SUCCESS.getCode();
-            results.add(u.toJson());
-        } catch (UsernameNotFoundException ex) {
-            responseCode = ResponseCode.NO_RESULTS.getCode();
-        }
-        JSONObject json = new JSONObject();
-        json.put(Keys.RESPONSE_CODE, responseCode);
-        json.put(Keys.RESULTS, results);
-        return json;
+    @GetMapping("/delete")
+    public void delete(@RequestParam("id") Long userId) {
+        userService.delete(userId);
     }
+
+    @PostMapping("/update")
+    public void update(@RequestBody User user) {
+        userService.update(user);
+    }
+
+
 }
