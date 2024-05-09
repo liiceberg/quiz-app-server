@@ -49,7 +49,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
-//    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
+    implementation("com.squareup.okhttp3:okhttp:3.14.6")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
