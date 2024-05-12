@@ -2,8 +2,8 @@ package ru.kpfu.itis.liiceberg.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.liiceberg.dto.RefreshJwtRequest;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.service.UserService;
@@ -26,12 +26,12 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/delete")
     public void delete(@RequestParam("id") Long userId) {
         userService.delete(userId);
     }
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/update")
     public void update(@RequestBody User user) {
         userService.update(user);
