@@ -2,6 +2,7 @@ package ru.kpfu.itis.liiceberg.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kpfu.itis.liiceberg.exception.ApiNotAvailableException;
 import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
 import ru.kpfu.itis.liiceberg.model.GameContent;
 import ru.kpfu.itis.liiceberg.model.Room;
@@ -23,7 +24,7 @@ public class GameService {
         this.triviaService = triviaService;
     }
     @Transactional
-    public GameContent getByRoom(String code) throws RoomNotFoundException, IOException {
+    public GameContent getByRoom(String code) throws RoomNotFoundException, ApiNotAvailableException {
         gameRepository.deleteIfRequestsGreaterThanCapacity(code);
         Optional<GameContent> optionalContent = gameRepository.findByRoomCode(code);
         GameContent content;
@@ -34,10 +35,10 @@ public class GameService {
         }
         return increaseRequestsCount(content);
     }
-    public GameContent save(String code) throws RoomNotFoundException, IOException {
+    public GameContent save(String code) throws RoomNotFoundException, ApiNotAvailableException {
         Optional<Room> optionalRoom = roomRepository.findByCode(code);
         if (!optionalRoom.isPresent()) {
-            throw new RoomNotFoundException();
+            throw new RoomNotFoundException("Room not found");
         }
         Room room = optionalRoom.get();
         String content = triviaService.getTrivia(10, room.getCategory(), room.getDifficulty(), "multiple");

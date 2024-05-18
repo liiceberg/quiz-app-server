@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.liiceberg.dto.JwtRequest;
 import ru.kpfu.itis.liiceberg.dto.JwtResponse;
+import ru.kpfu.itis.liiceberg.dto.LoginResponse;
 import ru.kpfu.itis.liiceberg.filter.JwtProvider;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.UserRepository;
@@ -30,14 +31,14 @@ public class AuthService {
 
 
 
-    public JwtResponse login(JwtRequest request) {
+    public LoginResponse login(JwtRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(request.getEmail()));
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             String accessToken = jwtProvider.generateAccessToken(user);
             String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getEmail(), refreshToken);
-            return new JwtResponse(accessToken, refreshToken);
+            return new LoginResponse(accessToken, refreshToken, user.getId());
         }
         return null;
     }

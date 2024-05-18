@@ -38,8 +38,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(auth -> auth
                         .antMatchers("api/auth/login", "api/auth/token").permitAll()
-                        .antMatchers("user/register").anonymous()
-                        .antMatchers("api/trivia/**", "room/**").hasAnyRole(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
+                        .antMatchers("api/user/register").anonymous()
+                        .antMatchers("api/trivia/**", "api/room/**").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
                         .and().addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 )
                 .build();

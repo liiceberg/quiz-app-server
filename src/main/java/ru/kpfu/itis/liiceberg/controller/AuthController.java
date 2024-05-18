@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kpfu.itis.liiceberg.dto.JwtRequest;
 import ru.kpfu.itis.liiceberg.dto.JwtResponse;
+import ru.kpfu.itis.liiceberg.dto.LoginResponse;
 import ru.kpfu.itis.liiceberg.dto.RefreshJwtRequest;
 import ru.kpfu.itis.liiceberg.service.AuthService;
 
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody JwtRequest jwtRequest) {
         return ResponseEntity.ok(authService.login(jwtRequest));
     }
 

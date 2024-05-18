@@ -1,0 +1,16 @@
+### Login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "example2@mail.ru",
+  "password": "password1108"
+}
+
+### Refresh
+POST http://localhost:8080/api/auth/refresh
+Content-Type: application/json
+
+{
+  "token": "ue873wfy8w4hfihw4jf83w9jf9w83jfwerviuhreuguerhf834g4wiegioe4jigje4iurgbvrthfbvjdf"
+}

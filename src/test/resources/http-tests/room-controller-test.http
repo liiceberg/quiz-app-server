@@ -1,0 +1,18 @@
+### Create room
+POST http://localhost:8080/api/room/create
+Content-Type: application/json
+
+{
+  "capacity": 3,
+  "difficulty": "easy",
+  "category": 15
+}
+
+### Get game content
+GET http://localhost:8080/api/room/game?code=0GZG66
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2MDU3NTg1LCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzeWx1In0.2mvTHyDdm3gogv2jr6xWqwUyuT3nw0YLJancJlrzuvI
+
+
+### Get all
+GET http://localhost:8080/api/room/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2MDU3NDc2LCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzeWx1In0.95raOCmg_NUPCCKjubyJ8v8ZZfxrSX-AIBoQyxnG68Y

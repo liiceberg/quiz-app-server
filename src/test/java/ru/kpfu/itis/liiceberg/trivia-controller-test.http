@@ -1,5 +1,0 @@
-### Categories
-GET http://localhost:8080/api/trivia/categories
-
-### Trivia
-GET http://localhost:8080/api/trivia?amount=10&category=12&type=multiple&difficulty=easy

@@ -1,0 +1,16 @@
+### Registration
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+
+{
+  "email": "example2@mail.ru",
+  "password": "password1108"
+}
+
+
+### Update username
+GET http://localhost:8080/api/user/update/name?id=2&name=ais
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2MDU3NTg1LCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzeWx1In0.2mvTHyDdm3gogv2jr6xWqwUyuT3nw0YLJancJlrzuvI
+
+
+
