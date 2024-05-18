@@ -1,6 +1,5 @@
 package ru.kpfu.itis.liiceberg.controller;
 
-import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +26,6 @@ public class TriviaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @SneakyThrows
     @GetMapping
     public ResponseEntity<String> get(@RequestParam("amount") Integer amount,
                                       @RequestParam("category") Integer category,

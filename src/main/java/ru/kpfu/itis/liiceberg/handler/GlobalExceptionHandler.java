@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiNotAvailableException.class)
     public ResponseEntity<ErrorDto> apiNotAvailable() {
         ErrorDto error = new ErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to get data from the api");
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorDto> methodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ErrorDto error = new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 

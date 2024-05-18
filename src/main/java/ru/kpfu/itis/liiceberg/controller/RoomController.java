@@ -45,7 +45,7 @@ public class RoomController {
         return new ResponseEntity<>(new CreateRoomResponse(code), HttpStatus.OK);
     }
 
-    @GetMapping("delete")
+    @PostMapping("delete")
     @Scheduled(fixedRate = 60 * 60 * 1000)
     public void delete() {
         roomService.deleteOutdated();
