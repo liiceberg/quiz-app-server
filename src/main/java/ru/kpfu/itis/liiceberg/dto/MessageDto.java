@@ -2,15 +2,19 @@ package ru.kpfu.itis.liiceberg.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.json.JSONObject;
 @Getter
 @Builder
+@ToString
 public class MessageDto {
-    private String sender;
+    private Long sender;
     private Code code;
-    private JSONObject content;
+    private String message;
+    private Integer wait;
+    private Integer score;
     public enum Code {
-        JOIN, EXIT, SCORE, NOT_FOUND
+        JOIN, READY, EXIT, SCORE
     }
 
 }

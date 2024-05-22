@@ -56,8 +56,8 @@ public class LoggingAspect {
         Object result;
         try {
             result = joinPoint.proceed();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        } catch (Throwable ex) {
+            return null;
         }
 
         return result;

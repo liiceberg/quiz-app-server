@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDto> unauthorized() {
-        ErrorDto error = new ErrorDto(HttpStatus.UNAUTHORIZED, "Access is denied");
+        ErrorDto error = new ErrorDto(HttpStatus.UNAUTHORIZED, "Unauthorized");
         return new ResponseEntity<>(error, error.getStatus());
     }
 

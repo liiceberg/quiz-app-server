@@ -19,13 +19,15 @@ public class RoomService {
     private final RoomRepository repository;
     private final Long ACTIVE_PERIOD = (long) (24 * 60 * 60 * 1000);
     private final Map<String, Integer> roomCapacity;
+    private final Map<String, Integer> unreadyPlayers;
 
     public RoomService(RoomRepository repository) {
         this.repository = repository;
         roomCapacity = new HashMap<>();
+        unreadyPlayers = new HashMap<>();
     }
 
-    public String save(CreateRoomDto dto) {
+    public Room save(CreateRoomDto dto) {
         Room room = Room.builder()
                 .code(RandomString.make(6))
                 .capacity(dto.getCapacity())
@@ -34,7 +36,7 @@ public class RoomService {
                 .datetime(System.currentTimeMillis())
                 .build();
         repository.save(room);
-        return room.getCode();
+        return room;
     }
     @Transactional
     public void deleteOutdated() {
@@ -46,11 +48,14 @@ public class RoomService {
         return repository.getCapacityByCode(code);
     }
 
+
     public Integer changeRemainingCapacity(String roomCode, boolean isIncrease) throws RoomNotFoundException {
         if (!roomCapacity.containsKey(roomCode)) {
-            roomCapacity.put(roomCode, getRoomCapacity(roomCode));
+            int capacity = getRoomCapacity(roomCode);
+            roomCapacity.put(roomCode, capacity);
+            unreadyPlayers.put(roomCode, capacity);
         }
-         int remainingCapacity = roomCapacity.get(roomCode);
+        int remainingCapacity = roomCapacity.get(roomCode);
         int k = 1;
         if (isIncrease) {
             k = -1;
@@ -65,6 +70,15 @@ public class RoomService {
 
     public Integer getRemainingCapacity(String room) {
         return roomCapacity.get(room);
+    }
+
+    public Integer increaseReadyPlayersNumber(String room) {
+        if (unreadyPlayers.get(room) <= 0) {
+            unreadyPlayers.put(room, getRoomCapacity(room) - 1);
+        } else {
+            unreadyPlayers.put(room, unreadyPlayers.get(room) - 1);
+        }
+        return unreadyPlayers.get(room);
     }
 
     public List<RoomDto> getAll() {
