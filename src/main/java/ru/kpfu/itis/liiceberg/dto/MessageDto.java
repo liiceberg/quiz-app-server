@@ -3,7 +3,6 @@ package ru.kpfu.itis.liiceberg.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.json.JSONObject;
 @Getter
 @Builder
 @ToString
@@ -14,7 +13,7 @@ public class MessageDto {
     private Integer wait;
     private Integer score;
     public enum Code {
-        JOIN, READY, EXIT, SCORE
+        JOIN, READY, EXIT, SCORE, ALIVE
     }
 
 }

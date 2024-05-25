@@ -37,4 +37,10 @@ public class User {
     @Column(name = "role")
     private Set<Role> roles;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users")
+    private Set<Room> rooms;
+
 }

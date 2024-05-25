@@ -1,8 +1,10 @@
 package ru.kpfu.itis.liiceberg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Builder
@@ -29,4 +31,15 @@ public class Room {
     @Column
     private String difficulty;
 
+    @Setter
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "user_room",
+            joinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+    )
+    private Set<User> users;
 }

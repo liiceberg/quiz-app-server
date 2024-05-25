@@ -4,11 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.kpfu.itis.liiceberg.dto.RoomDto;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
 import ru.kpfu.itis.liiceberg.dto.UsernameResponse;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.service.UserService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/user", produces = "application/json")
@@ -47,5 +50,11 @@ public class UserController {
     public ResponseEntity<UsernameResponse> getName(@RequestParam("id") Long userId) {
         String name = userService.getName(userId);
         return new ResponseEntity<>(new UsernameResponse(name), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("get/rooms")
+    public ResponseEntity<List<RoomDto>> getRoomsByUserId(@RequestParam("id") Long id) throws BadArgumentsException {
+        return new ResponseEntity<>(userService.getRooms(id), HttpStatus.OK);
     }
 }

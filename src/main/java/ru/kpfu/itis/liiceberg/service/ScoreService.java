@@ -1,41 +1,31 @@
 package ru.kpfu.itis.liiceberg.service;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.liiceberg.dto.ScoreDto;
-import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
 import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.model.Score;
 import ru.kpfu.itis.liiceberg.model.User;
-import ru.kpfu.itis.liiceberg.repository.RoomRepository;
 import ru.kpfu.itis.liiceberg.repository.ScoreRepository;
-import ru.kpfu.itis.liiceberg.repository.UserRepository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ScoreService {
     private final ScoreRepository scoreRepository;
-    private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
     private final Map<String, Integer> finishedPlayers;
 
-    public ScoreService(ScoreRepository scoreRepository, RoomRepository roomRepository, UserRepository userRepository) {
+    public ScoreService(ScoreRepository scoreRepository) {
         this.scoreRepository = scoreRepository;
-        this.roomRepository = roomRepository;
-        this.userRepository = userRepository;
         finishedPlayers = new HashMap<>();
     }
 
-    public void save(Integer value, Long id, String code) throws RoomNotFoundException {
+    public void save(Integer value, User user, Room room) {
 
-        Optional<Score> oldScoresOptional = scoreRepository.findByRoomCodeAndUserId(code, id);
-
-        Optional<Room> optionalRoom = roomRepository.findByCode(code);
-        if (!optionalRoom.isPresent()) {
-            throw new RoomNotFoundException("Room doesn't exist");
-        }
+        Optional<Score> oldScoresOptional = scoreRepository.findByRoomAndUserId(room, user.getId());
 
         if (oldScoresOptional.isPresent()) {
             Score oldScores = oldScoresOptional.get();
@@ -43,19 +33,15 @@ public class ScoreService {
             scoreRepository.save(oldScores);
         }
         else {
-            Optional<User> user = userRepository.findById(id);
-            if (!user.isPresent()) {
-                throw new UsernameNotFoundException(id.toString());
-            }
             Score score = Score.builder()
                     .value(value)
-                    .user(user.get())
-                    .room(optionalRoom.get())
+                    .user(user)
+                    .room(room)
                     .build();
             scoreRepository.save(score);
         }
 
-        saveFinishedPlayer(optionalRoom.get());
+        saveFinishedPlayer(room);
     }
 
     private void saveFinishedPlayer(Room room) {

@@ -2,16 +2,17 @@ package ru.kpfu.itis.liiceberg.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.kpfu.itis.liiceberg.dto.RoomDto;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
 import ru.kpfu.itis.liiceberg.model.Role;
+import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -46,6 +47,16 @@ public class UserService {
             throw new BadArgumentsException("User not found");
         }
     }
+
+    public User getById(Long id) throws BadArgumentsException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new BadArgumentsException("User not found");
+        }
+    }
+
     @Transactional
     public void editUsername(String username, Long id) throws BadArgumentsException {
         try {
@@ -65,6 +76,25 @@ public class UserService {
 
     public void update(User u) {
         userRepository.save(u);
+    }
+
+    @Transactional
+    public void addRoom(Room room, Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isPresent() && !u.get().getRooms().contains(room)) {
+            User user = u.get();
+            Set<Room> roomSet = user.getRooms();
+            roomSet.add(room);
+            user.setRooms(roomSet);
+            userRepository.save(user);
+        }
+    }
+
+    public List<RoomDto> getRooms(Long userId) throws BadArgumentsException {
+        return getById(userId).getRooms().stream()
+                .sorted(Comparator.comparing(Room::getDatetime))
+                .map(r -> new RoomDto(r.getCode(), r.getCapacity(), r.getCategory(), r.getDifficulty()))
+                .collect(Collectors.toList());
     }
 
 }

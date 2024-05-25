@@ -7,11 +7,10 @@ import ru.kpfu.itis.liiceberg.dto.CreateRoomDto;
 import ru.kpfu.itis.liiceberg.dto.RoomDto;
 import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
 import ru.kpfu.itis.liiceberg.model.Room;
+import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.RoomRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +37,36 @@ public class RoomService {
         repository.save(room);
         return room;
     }
+
+    public Room get(String code) throws RoomNotFoundException {
+        Optional<Room> optionalRoom = repository.findByCode(code);
+        if (!optionalRoom.isPresent()) {
+            throw new RoomNotFoundException("Room not founded");
+        }
+        return optionalRoom.get();
+    }
+
     @Transactional
     public void deleteOutdated() {
         Long latestDate = System.currentTimeMillis() - ACTIVE_PERIOD;
         repository.deleteRoomByDatetimeIsBefore(latestDate);
+    }
+
+    @Transactional
+    public void updateDatetime(String code) {
+        repository.updateDatetime(code, System.currentTimeMillis());
+    }
+
+    @Transactional
+    public void updatePlayers(User user, String code) {
+        Optional<Room> r = repository.findByCode(code);
+        if (r.isPresent() && !r.get().getUsers().contains(user)) {
+            Room room = r.get();
+            Set<User> userSet = room.getUsers();
+            userSet.add(user);
+            room.setUsers(userSet);
+            repository.save(room);
+        }
     }
 
     public Integer getRoomCapacity(String code) {
@@ -49,7 +74,7 @@ public class RoomService {
     }
 
 
-    public Integer changeRemainingCapacity(String roomCode, boolean isIncrease) throws RoomNotFoundException {
+    public Integer changeRemainingCapacity(String roomCode, boolean isIncrease) {
         if (!roomCapacity.containsKey(roomCode)) {
             int capacity = getRoomCapacity(roomCode);
             roomCapacity.put(roomCode, capacity);
@@ -60,7 +85,7 @@ public class RoomService {
         if (isIncrease) {
             k = -1;
             if (remainingCapacity + k < 0) {
-                throw new RoomNotFoundException("Room already full");
+                return -1;
             }
         }
         roomCapacity.put(roomCode, remainingCapacity + k);
@@ -88,5 +113,11 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getPlayers(String code) throws RoomNotFoundException {
+        return get(code).getUsers().stream()
+                .map(u -> u.getName() != null ? u.getName() : "user")
+                .sorted()
+                .collect(Collectors.toList());
+    }
 
 }

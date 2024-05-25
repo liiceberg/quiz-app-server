@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<GameContent, Long> {
     Optional<GameContent> findByRoomCode(String code);
-
 }
