@@ -41,10 +41,14 @@ public class UserService {
 
     public User get(UserRequestDto dto) throws BadArgumentsException {
         Optional<User> user = userRepository.findByEmail(dto.getEmail());
-        if (user.isPresent() && encoder.matches(dto.getPassword(), user.get().getPassword())) {
-            return user.get();
+        if (user.isPresent()) {
+            if (encoder.matches(dto.getPassword(), user.get().getPassword())){
+                return user.get();
+            } else {
+                throw new BadArgumentsException("Invalid password");
+            }
         } else {
-            throw new BadArgumentsException("User not found");
+            throw new BadArgumentsException("Email was not found");
         }
     }
 

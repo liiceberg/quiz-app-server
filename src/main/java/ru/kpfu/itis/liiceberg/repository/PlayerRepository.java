@@ -12,9 +12,13 @@ import java.util.List;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> deleteByIsAliveFalse();
+
     void deleteByUserId(Long id);
+
     @Modifying
     @Query("update Player p set p.isAlive = false where p.user = (select u from User u where u.id = :userId)")
     void setNotAlive(Long userId);
 
+    @Query("select count(p) from Player p where p.room.code = :code and p.isAlive=true")
+    Integer getAlivePlayersCountByRoomCode(String code);
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.kpfu.itis.liiceberg.dto.JwtRequest;
 import ru.kpfu.itis.liiceberg.dto.JwtResponse;
 import ru.kpfu.itis.liiceberg.dto.LoginResponse;
+import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
 import ru.kpfu.itis.liiceberg.filter.JwtProvider;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.UserRepository;
@@ -31,7 +32,7 @@ public class AuthService {
 
 
 
-    public LoginResponse login(JwtRequest request) {
+    public LoginResponse login(JwtRequest request) throws BadArgumentsException {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(request.getEmail()));
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -40,7 +41,7 @@ public class AuthService {
             refreshStorage.put(user.getEmail(), refreshToken);
             return new LoginResponse(accessToken, refreshToken, user.getId());
         }
-        return null;
+        throw new BadArgumentsException("Invalid Password");
     }
 
 

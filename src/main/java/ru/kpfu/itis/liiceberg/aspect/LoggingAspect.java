@@ -23,10 +23,12 @@ public class LoggingAspect {
     @Pointcut("execution(* ru.kpfu.itis.liiceberg.controller..*.*(..))")
     public void logController() {
     }
+
     @Pointcut("execution(* ru.kpfu.itis.liiceberg.filter.JwtFilter.doFilter())")
     public void logFilter() {
 
     }
+
     @AfterThrowing(pointcut = "logController() || logFilter()", throwing = "ex")
     public void logException(Exception ex) {
         String message = "An error occurred: " + ex.getMessage();
@@ -35,7 +37,7 @@ public class LoggingAspect {
 
 
     @Around("logController()")
-    public Object log(ProceedingJoinPoint joinPoint) {
+    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         LOGGER.info("Method: {}", signature.getName());
@@ -53,13 +55,6 @@ public class LoggingAspect {
                 }
             }
         }
-        Object result;
-        try {
-            result = joinPoint.proceed();
-        } catch (Throwable ex) {
-            return null;
-        }
-
-        return result;
+        return joinPoint.proceed();
     }
 }

@@ -15,13 +15,41 @@ import java.util.Map;
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final Map<Long, Long> confirmationTime;
+    private final Map<String, Integer> unreadyPlayers;
 
     public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
         confirmationTime = new HashMap<>();
+        unreadyPlayers = new HashMap<>();
     }
 
-    public void save(User user, Room room) {
+    public Integer addPlayer(Room room, User user) {
+        Integer currentPlayersNumber = getAlivePlayersCount(room.getCode());
+         if (currentPlayersNumber < room.getCapacity()) {
+             save(user, room);
+             ++currentPlayersNumber;
+             return room.getCapacity() - currentPlayersNumber;
+         }
+         return -1;
+    }
+
+    public Integer increaseReadyPlayersNumber(Room room) {
+        if (!unreadyPlayers.containsKey(room.getCode())) {
+            unreadyPlayers.put(room.getCode(), room.getCapacity());
+        }
+        if (unreadyPlayers.get(room.getCode()) <= 0) {
+            unreadyPlayers.put(room.getCode(), room.getCapacity() - 1);
+        } else {
+            unreadyPlayers.put(room.getCode(), unreadyPlayers.get(room.getCode()) - 1);
+        }
+        return unreadyPlayers.get(room.getCode());
+    }
+
+    public Integer getAlivePlayersCount(String code) {
+        return playerRepository.getAlivePlayersCountByRoomCode(code);
+    }
+
+    private void save(User user, Room room) {
         Player player = playerRepository.save(new Player(user, room));
         confirmationTime.put(player.getUser().getId(), System.currentTimeMillis());
     }

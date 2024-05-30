@@ -45,6 +45,7 @@ dependencies {
     implementation("org.webjars:webjars-locator-core:0.46")
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
+    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
 
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")

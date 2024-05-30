@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 public class CreateRoomDto {
-    @NotBlank
+    @NotBlank(message = "Capacity shouldn't be blank")
     private Integer capacity;
     private Integer category;
     private String difficulty;

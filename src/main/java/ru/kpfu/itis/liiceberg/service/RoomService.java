@@ -17,13 +17,9 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository repository;
     private final Long ACTIVE_PERIOD = (long) (24 * 60 * 60 * 1000);
-    private final Map<String, Integer> roomCapacity;
-    private final Map<String, Integer> unreadyPlayers;
 
     public RoomService(RoomRepository repository) {
         this.repository = repository;
-        roomCapacity = new HashMap<>();
-        unreadyPlayers = new HashMap<>();
     }
 
     public Room save(CreateRoomDto dto) {
@@ -69,42 +65,6 @@ public class RoomService {
         }
     }
 
-    public Integer getRoomCapacity(String code) {
-        return repository.getCapacityByCode(code);
-    }
-
-
-    public Integer changeRemainingCapacity(String roomCode, boolean isIncrease) {
-        if (!roomCapacity.containsKey(roomCode)) {
-            int capacity = getRoomCapacity(roomCode);
-            roomCapacity.put(roomCode, capacity);
-            unreadyPlayers.put(roomCode, capacity);
-        }
-        int remainingCapacity = roomCapacity.get(roomCode);
-        int k = 1;
-        if (isIncrease) {
-            k = -1;
-            if (remainingCapacity + k < 0) {
-                return -1;
-            }
-        }
-        roomCapacity.put(roomCode, remainingCapacity + k);
-
-        return roomCapacity.get(roomCode);
-    }
-
-    public Integer getRemainingCapacity(String room) {
-        return roomCapacity.get(room);
-    }
-
-    public Integer increaseReadyPlayersNumber(String room) {
-        if (unreadyPlayers.get(room) <= 0) {
-            unreadyPlayers.put(room, getRoomCapacity(room) - 1);
-        } else {
-            unreadyPlayers.put(room, unreadyPlayers.get(room) - 1);
-        }
-        return unreadyPlayers.get(room);
-    }
 
     public List<RoomDto> getAll() {
         return repository.findAllOrderByDatetime()

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -64,6 +65,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorDto> methodNotSupported(HttpRequestMethodNotSupportedException ex) {
         ErrorDto error = new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorDto> parameterMissing(MissingServletRequestParameterException ex) {
+        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST, "Parameter missing: " + ex.getParameterName());
         return new ResponseEntity<>(error, error.getStatus());
     }
 

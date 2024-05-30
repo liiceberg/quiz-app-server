@@ -3,14 +3,14 @@ POST http://localhost:8080/api/user/register
 Content-Type: application/json
 
 {
-  "email": "example2@mail.ru",
+  "email": "u@gmail.com",
   "password": "password1108"
 }
 
 
 ### Update username
 GET http://localhost:8080/api/user/update/name?id=2&name=ais
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2MDU3NTg1LCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzeWx1In0.2mvTHyDdm3gogv2jr6xWqwUyuT3nw0YLJancJlrzuvI
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2NzI2MTIxLCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzIn0._zWM0VYDkW9gU79chM6TEKir7EaWBUE9DG2ESDUiNd8
 
 
 
