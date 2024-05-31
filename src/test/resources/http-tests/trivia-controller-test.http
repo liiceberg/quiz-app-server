@@ -1,6 +1,6 @@
 ### Categories
 GET http://localhost:8080/api/trivia/categories
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE2MDU1NDAzLCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzeWx1In0.6XY9S0ZsTYYE2Z8EyF3mmKVSoZLWcZpNsY-B4DYdoas
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBtYWlsLnJ1IiwiZXhwIjoxNzE3MTU2NTMxLCJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoiYWlzIn0.Jea9kWK4dQnS_bBhSWkqEuFIop-obrTw7G0YsXM1_hk
 
 ### Trivia
 GET http://localhost:8080/api/trivia?amount=10&category=12&type=multiple&difficulty=easy

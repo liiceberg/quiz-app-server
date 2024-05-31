@@ -10,7 +10,7 @@ plugins {
 
 apply(plugin = "io.spring.dependency-management")
 
-group = "org.example"
+group = "ru.kpfu.itis.liiceberg"
 version = "1.0-SNAPSHOT"
 
 repositories {

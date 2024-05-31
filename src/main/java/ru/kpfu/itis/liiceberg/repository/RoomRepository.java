@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByCode(String code);
-    @Query("select r.capacity from Room r where r.code = :code")
-    Integer getCapacityByCode(String code);
     void deleteRoomByDatetimeIsBefore(Long datetime);
     @Query("select r from Room r order by r.datetime desc")
     List<Room> findAllOrderByDatetime();
