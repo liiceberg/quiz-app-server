@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.liiceberg.exception.ApiNotAvailableException;
-import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
+import ru.kpfu.itis.liiceberg.exception.NotFoundException;
 import ru.kpfu.itis.liiceberg.model.GameContent;
 import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.repository.GameRepository;
@@ -22,10 +22,10 @@ public class GameService {
     }
 
     @Transactional
-    public String getByRoom(String code) throws ApiNotAvailableException, RoomNotFoundException {
+    public String getByRoom(String code) throws ApiNotAvailableException, NotFoundException {
         Optional<GameContent> optionalContent = gameRepository.findByRoomCode(code);
         if (!optionalContent.isPresent()) {
-            throw new RoomNotFoundException("Game content for this room not found");
+            throw new NotFoundException("Game content for this room not found");
         }
         GameContent content = optionalContent.get();
         String getContent = content.getContent().toString();

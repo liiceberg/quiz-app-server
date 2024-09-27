@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.liiceberg.dto.CreateRoomDto;
 import ru.kpfu.itis.liiceberg.dto.RoomDto;
-import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
+import ru.kpfu.itis.liiceberg.exception.NotFoundException;
 import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.RoomRepository;
@@ -34,10 +34,10 @@ public class RoomService {
         return room;
     }
 
-    public Room get(String code) throws RoomNotFoundException {
+    public Room get(String code) throws NotFoundException {
         Optional<Room> optionalRoom = repository.findByCode(code);
         if (!optionalRoom.isPresent()) {
-            throw new RoomNotFoundException("Room not founded");
+            throw new NotFoundException("Room not founded");
         }
         return optionalRoom.get();
     }
@@ -73,7 +73,7 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getPlayers(String code) throws RoomNotFoundException {
+    public List<String> getPlayers(String code) throws NotFoundException {
         return get(code).getUsers().stream()
                 .map(u -> u.getName() != null ? u.getName() : "user")
                 .sorted()

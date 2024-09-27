@@ -12,7 +12,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kpfu.itis.liiceberg.dto.ErrorDto;
 import ru.kpfu.itis.liiceberg.exception.ApiNotAvailableException;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
-import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
+import ru.kpfu.itis.liiceberg.exception.ConflictException;
+import ru.kpfu.itis.liiceberg.exception.NotFoundException;
 
 import javax.security.auth.message.AuthException;
 
@@ -28,13 +29,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorDto> userNotFound() {
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST, "User not found");
+        ErrorDto error = new ErrorDto(HttpStatus.NOT_FOUND, "User not found");
         return new ResponseEntity<>(error, error.getStatus());
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ErrorDto> auth(AuthException ex) {
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ErrorDto error = new ErrorDto(HttpStatus.UNAUTHORIZED, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -44,15 +45,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, error.getStatus());
     }
 
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorDto> conflict(ConflictException ex) {
+        ErrorDto error = new ErrorDto(HttpStatus.CONFLICT, ex.getMessage());
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorDto> pageNotFound() {
         ErrorDto error = new ErrorDto(HttpStatus.NOT_FOUND, "Page not found");
         return new ResponseEntity<>(error, error.getStatus());
     }
 
-    @ExceptionHandler(RoomNotFoundException.class)
-    public ResponseEntity<ErrorDto> roomNotFound(RoomNotFoundException ex) {
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST, ex.getMessage());
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDto> notFound(NotFoundException ex) {
+        ErrorDto error = new ErrorDto(HttpStatus.NOT_FOUND, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 

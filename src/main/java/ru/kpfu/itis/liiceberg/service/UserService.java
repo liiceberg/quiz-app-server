@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import ru.kpfu.itis.liiceberg.dto.RoomDto;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
+import ru.kpfu.itis.liiceberg.exception.ConflictException;
+import ru.kpfu.itis.liiceberg.exception.NotFoundException;
 import ru.kpfu.itis.liiceberg.model.Role;
 import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.repository.UserRepository;
 
+import javax.security.auth.message.AuthException;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +29,7 @@ public class UserService {
     }
 
 
-    public void create(UserRequestDto dto) throws BadArgumentsException {
+    public void create(UserRequestDto dto) throws ConflictException {
         User user = User.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
@@ -35,20 +38,20 @@ public class UserService {
         try {
             userRepository.save(user);
         } catch (Exception ex) {
-            throw new BadArgumentsException("Such email already registered");
+            throw new ConflictException("Such email already registered");
         }
     }
 
-    public User get(UserRequestDto dto) throws BadArgumentsException {
+    public User get(UserRequestDto dto) throws AuthException, NotFoundException {
         Optional<User> user = userRepository.findByEmail(dto.getEmail());
         if (user.isPresent()) {
             if (encoder.matches(dto.getPassword(), user.get().getPassword())){
                 return user.get();
             } else {
-                throw new BadArgumentsException("Invalid password");
+                throw new AuthException("Invalid password");
             }
         } else {
-            throw new BadArgumentsException("Email was not found");
+            throw new NotFoundException("Email was not found");
         }
     }
 

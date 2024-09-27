@@ -32,7 +32,7 @@ public class AuthService {
 
 
 
-    public LoginResponse login(JwtRequest request) throws BadArgumentsException {
+    public LoginResponse login(JwtRequest request) throws AuthException {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(request.getEmail()));
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -41,7 +41,7 @@ public class AuthService {
             refreshStorage.put(user.getEmail(), refreshToken);
             return new LoginResponse(accessToken, refreshToken, user.getId());
         }
-        throw new BadArgumentsException("Invalid Password");
+        throw new AuthException("Invalid Password");
     }
 
 

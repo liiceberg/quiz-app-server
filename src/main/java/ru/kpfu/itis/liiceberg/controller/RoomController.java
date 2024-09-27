@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.liiceberg.dto.*;
 import ru.kpfu.itis.liiceberg.exception.ApiNotAvailableException;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
-import ru.kpfu.itis.liiceberg.exception.RoomNotFoundException;
+import ru.kpfu.itis.liiceberg.exception.NotFoundException;
 import ru.kpfu.itis.liiceberg.model.Player;
 import ru.kpfu.itis.liiceberg.model.Room;
 import ru.kpfu.itis.liiceberg.service.*;
@@ -128,13 +128,13 @@ public class RoomController {
     @Operation(description = "Get actual game content by room code")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("game")
-    public ResponseEntity<String> getGameContent(@RequestParam("code") String code) throws ApiNotAvailableException, RoomNotFoundException {
+    public ResponseEntity<String> getGameContent(@RequestParam("code") String code) throws ApiNotAvailableException, NotFoundException {
         return new ResponseEntity<>(gameService.getByRoom(code), HttpStatus.OK);
     }
     @Operation(description = "Get players name list by room code")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("players")
-    public ResponseEntity<List<String>> getUsersByRoom(@RequestParam("code") String code) throws RoomNotFoundException {
+    public ResponseEntity<List<String>> getUsersByRoom(@RequestParam("code") String code) throws NotFoundException {
         return new ResponseEntity<>(roomService.getPlayers(code), HttpStatus.OK);
     }
 
@@ -143,7 +143,7 @@ public class RoomController {
         return name != null ? name : "user";
     }
 
-    private void saveUserRoom(Long userId, String code) throws BadArgumentsException, RoomNotFoundException {
+    private void saveUserRoom(Long userId, String code) throws BadArgumentsException, NotFoundException {
         roomService.updatePlayers(userService.getById(userId), code);
         userService.addRoom(roomService.get(code), userId);
     }

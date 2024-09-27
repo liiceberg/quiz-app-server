@@ -39,7 +39,7 @@ public class AuthController {
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())}),
             @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})})
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@Validated @RequestBody JwtRequest jwtRequest) throws BadArgumentsException {
+    public ResponseEntity<LoginResponse> login(@Validated @RequestBody JwtRequest jwtRequest) throws AuthException {
         return ResponseEntity.ok(authService.login(jwtRequest));
     }
     @Operation(description = "Refresh jwt token with invalidate")

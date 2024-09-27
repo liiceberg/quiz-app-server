@@ -11,6 +11,7 @@ import ru.kpfu.itis.liiceberg.dto.RoomDto;
 import ru.kpfu.itis.liiceberg.dto.UserRequestDto;
 import ru.kpfu.itis.liiceberg.dto.UsernameResponse;
 import ru.kpfu.itis.liiceberg.exception.BadArgumentsException;
+import ru.kpfu.itis.liiceberg.exception.ConflictException;
 import ru.kpfu.itis.liiceberg.model.User;
 import ru.kpfu.itis.liiceberg.service.UserService;
 
@@ -26,7 +27,7 @@ public class UserController {
     }
     @Operation(description = "Register user by email and password")
     @PostMapping("/register")
-    public ResponseEntity<Void> create(@Validated @RequestBody UserRequestDto user) throws BadArgumentsException {
+    public ResponseEntity<Void> create(@Validated @RequestBody UserRequestDto user) throws ConflictException {
         userService.create(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
